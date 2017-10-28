@@ -2,6 +2,7 @@ package com.coolweather.android;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -111,6 +112,18 @@ public class ChooseAreaFragment extends Fragment
                 {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }
+                //如果是县级别的，就启动WeatherActivity
+                else if (currentLevel == LEVEL_COUNTY)
+                {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    //跳转到WeatherActivity
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    //销毁当前活动
+                    getActivity().finish();
+
                 }
             }
         });
@@ -302,9 +315,12 @@ public class ChooseAreaFragment extends Fragment
         if (progressDialog == null)
         {
             progressDialog = new ProgressDialog(getActivity());
+            //设置进度对话框内容
             progressDialog.setMessage("正在加载...");
+            //设置进度对话框外不可点击
             progressDialog.setCanceledOnTouchOutside(false);
         }
+        //显示进度对话框
         progressDialog.show();
     }
 
